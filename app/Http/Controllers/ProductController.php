@@ -88,9 +88,28 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        //
+        // $rules =[
+        //     'name' => 'required|max:255|unique:products',
+        //     'details' => 'required',
+        //     'price' => 'required|max:10',
+        //     'stock' => 'required|max:6',
+        //     'discount' => 'required|max:2',
+        // ];
+        // $validator=Validator::make($request->all(), $rules);
+
+        // if($validator->fails()){
+        //     return response()->json($validator->errors(), 400); //Bad Request
+        // }
+        $product=Product::find($id);
+        if(is_null($product)){
+            return response()->json(["message" => "Record not found!"], 404); //record not found 
+        }
+        $product->update($request->all());
+        return response()->json($product, Response::HTTP_OK ); //200
+
+        return response()->json(new ProductResource($product), Response::HTTP_CREATED ); //201
     }
 
     /**
