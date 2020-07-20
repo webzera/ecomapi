@@ -25,7 +25,7 @@ class ReviewRequest extends FormRequest
     {
         return [
             'customer' => 'required|max:25|unique:reviews',            
-            'review' => 'required',
+            'review' => 'required|max:255',
             'star' => 'required|integer|between:0,5',           
         ];
     }
