@@ -39,20 +39,21 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $rules =[
-            'name' => 'required|max:255|unique:products',
-            'details' => 'required',
-            'price' => 'required|max:10',
-            'stock' => 'required|max:6',
-            'discount' => 'required|max:2',
-        ];
-        $validator=Validator::make($request->all(), $rules);
+        // $rules =[
+        //     'name' => 'required|max:255|unique:products',
+        //     'details' => 'required',
+        //     'price' => 'required|max:10',
+        //     'stock' => 'required|max:6',
+        //     'discount' => 'required|max:2',
+        // ];
+        // $validator=Validator::make($request->all(), $rules);
 
-        if($validator->fails()){
-            return response()->json($validator->errors(), 400); //Bad Request
-        }
+        // if($validator->fails()){
+        //     return response()->json($validator->errors(), 400); //Bad Request
+        // }
+
         $product = Product::create($request->all());
         // return response()->json($product, 201); this one also working
         return response()->json(new ProductResource($product), Response::HTTP_CREATED);

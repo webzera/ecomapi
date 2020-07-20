@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Review;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Http\Resources\Review\ReviewResource;
+use App\Http\Requests\ReviewRequest;
 use App\Http\Resources\Review\ReviewCollection;
+use App\Http\Resources\Review\ReviewResource;
+use App\Models\Product;
+use App\Models\Review;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReviewController extends Controller
 {
@@ -37,9 +40,14 @@ class ReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ReviewRequest $request, Product $product)
     {
-        //
+        $review = new Review($request->all());
+        $product->reviews()->save($review);
+
+        return response()->json([
+            'data' => new ReviewResource($review)
+        ], Response::HTTP_CREATED);
     }
 
     /**
