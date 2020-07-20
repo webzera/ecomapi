@@ -8,6 +8,8 @@ use App\Http\Requests\ProductRequest;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
 
+// use App\Exceptions\Handler;
+
 use Symfony\Component\HttpFoundation\Response;
 
 use Illuminate\Support\Facades\Validator;
@@ -88,7 +90,7 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
         // $rules =[
         //     'name' => 'required|max:255|unique:products',
@@ -102,10 +104,7 @@ class ProductController extends Controller
         // if($validator->fails()){
         //     return response()->json($validator->errors(), 400); //Bad Request
         // }
-        $product=Product::find($id);
-        if(is_null($product)){
-            return response()->json(["message" => "Record not found!"], 404); //record not found 
-        }
+        
         $product->update($request->all());
         return response()->json($product, Response::HTTP_OK ); //200
 
@@ -118,12 +117,12 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        $product=Product::find($id);
-        if(is_null($product)){
-            return response()->json(["message" => "Record not found!"], Response::HTTP_NOT_FOUND); //404 
-        }
+        // $product=Product::find($id);
+        // if(is_null($product)){
+        //     return response()->json(["message" => "Record not found!"], Response::HTTP_NOT_FOUND); //404 
+        // }  THIS ONE GO EXCEPTION HANDLER
         $product->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT ); //204
     }
