@@ -20,5 +20,6 @@ Trait ApiExceptionTrait
 	            'errors' => 'URL NOT FOUND'
 	        ], Response::HTTP_NOT_FOUND);
 	    }
+	    return parent::render($request, $exception);
     }
 }

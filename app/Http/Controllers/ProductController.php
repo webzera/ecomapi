@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Exceptions\CheckBelongsToUser;
 use App\Http\Requests\ProductRequest;
-use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
-
-// use App\Exceptions\Handler;
-
-use Symfony\Component\HttpFoundation\Response;
-
+use App\Http\Resources\Product\ProductResource;
+use App\Models\Product;
+use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
@@ -104,9 +102,11 @@ class ProductController extends Controller
         // if($validator->fails()){
         //     return response()->json($validator->errors(), 400); //Bad Request
         // }
+
+        $this->ProductUserCheck($product);
         
         $product->update($request->all());
-        return response()->json($product, Response::HTTP_OK ); //200
+        // return response()->json($product, Response::HTTP_OK ); //200
 
         return response()->json(new ProductResource($product), Response::HTTP_CREATED ); //201
     }
@@ -123,7 +123,15 @@ class ProductController extends Controller
         // if(is_null($product)){
         //     return response()->json(["message" => "Record not found!"], Response::HTTP_NOT_FOUND); //404 
         // }  THIS ONE GO EXCEPTION HANDLER
+        $this->ProductUserCheck($product);
         $product->delete();
         return response()->json(null, Response::HTTP_NO_CONTENT ); //204
+    }
+    public function ProductUserCheck($product)
+    {
+        if(Auth::id() != $product->user_id ){
+            throw new CheckBelongsToUser;
+            
+        }
     }
 }
